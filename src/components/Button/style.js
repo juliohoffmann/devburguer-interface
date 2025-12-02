@@ -1,9 +1,10 @@
-// src/components/Button/index.jsx (após renomear)
-import React from 'react';
+
 import styled from 'styled-components';
 
 const StyledButton = styled.button`
   background-color: #9758A6; /* Exemplo de cor */
+
+
   color: #ffffff;
   padding: 12px 24px;
   border: none;
@@ -18,8 +19,6 @@ const StyledButton = styled.button`
   }
 `;
 
-export function Button({ children, ...props }) {
-  return <StyledButton {...props}>{children}</StyledButton>;
 }
 
 

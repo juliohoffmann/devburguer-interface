@@ -2,6 +2,7 @@ import styled from "styled-components";
 import backgroundDark from "../../assets/background 2.png";
 import backgroundLight from "../../assets/background 1.png";
 
+
 export const Container = styled.div`
   display: flex;
   height: 100vh;

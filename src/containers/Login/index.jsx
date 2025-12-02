@@ -1,7 +1,8 @@
-import { Container, LeftContainer, RightContainer, Title, Form, InputContainer, Link} from "./style";
+import { Container, LeftContainer, RightContainer, Title, Form, InputContainer, Link, Button} from "./style";
 import  Logo  from "../../assets/Logo.png";
 
-import { Button } from "../../components/Button";
+import { Button } from "../../components/Button/index.jsx";
+
 
 export function Login() {
    
