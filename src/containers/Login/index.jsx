@@ -1,7 +1,7 @@
-import { Container, LeftContainer, RightContainer, Title, InputContainer, Link} from "./style";
+import { Container, LeftContainer, RightContainer, Title, Form, InputContainer, Link} from "./style";
 import  Logo  from "../../assets/Logo.png";
 
-import  { Button }  from "../../components/Button/";
+import { Button } from "../../components/Button";
 
 export function Login() {
    
@@ -18,7 +18,7 @@ export function Login() {
          Acesse com seu <span>Login e Senha.</span>
         </Title>
 
-        <form>
+        <Form>
           <InputContainer>
             <label>Email</label>
             <input type="email" />
@@ -36,7 +36,7 @@ export function Login() {
           <Button>
             Entrar
           </Button>
-        </form>
+        </Form>
       
 
       <p>

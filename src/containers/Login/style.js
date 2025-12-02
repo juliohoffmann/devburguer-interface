@@ -54,7 +54,7 @@ export const RightContainer = styled.div`
     font-weight: inherit;
     cursor: pointer;
     
-  }};
+  }}
 `;
   
 export const Title = styled.h2`
