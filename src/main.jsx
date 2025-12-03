@@ -5,9 +5,11 @@ import { GlobalStyle } from './styles/globalStyles.js';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Login />
-    <GlobalStyle />
     
-  </StrictMode>,
+    <GlobalStyle />
+    <Login />
+    
+    
+  </StrictMode>
 );
 

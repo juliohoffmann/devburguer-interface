@@ -6,25 +6,17 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
     outline: none;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-style: normal;
   }
 
-  body {
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
-  }
+  
 
-  html, body, #root {
-    width: 100%;
-    height: 100%;
-  }
 
   button {
     cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-  }
-
-  input, textarea, select {
-    font-family: 'Poppins', sans-serif;
+   
   }
 `;
+ 

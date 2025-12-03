@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import backgroundDark from "../../assets/background 2.png";
-import backgroundLight from "../../assets/background 1.png";
 
+import backgroundLight from "../../assets/background 1.png";
+import backgroundDark from "../../assets/background 2.png";
 
 export const Container = styled.div`
   display: flex;
   height: 100vh;
-  width: 100lvw;
-  background-color: #1e1e1e
+  width: 100vw;
+  
 `;
 
 export const LeftContainer = styled.div`
@@ -25,6 +25,7 @@ export const LeftContainer = styled.div`
  
   img {
     width: 80%;
+    max-width: 600px;
   }
 `;
 
@@ -38,7 +39,7 @@ export const RightContainer = styled.div`
    padding: 20px;
 
   height: 100vh;
-  width: 100lvw;
+  width: 100vw;
   
   background-image: url(${backgroundLight});
   
@@ -55,9 +56,10 @@ export const RightContainer = styled.div`
     font-weight: inherit;
     cursor: pointer;
     
-  }}
+   }
+  }
 `;
-  
+
 export const Title = styled.h2`
   font-family: "Road Rage", sans-serif;
   font-size: 40px;
@@ -69,10 +71,10 @@ export const Title = styled.h2`
   span {
     color: #9758A6;
     
-  };
+  }
 `;
 
-export const Form = styled.form  `
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -117,5 +119,5 @@ export const Link = styled.a`
 
   &:hover {
     text-decoration: underline;
-  };
+  }
 `;

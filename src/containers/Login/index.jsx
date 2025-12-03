@@ -1,10 +1,11 @@
-import { Container, LeftContainer, RightContainer, Title, Form, InputContainer, Link, Button} from "./style";
+import { Container, LeftContainer, RightContainer, Title, Form, InputContainer, Link, } from "./style";
 import  Logo  from "../../assets/Logo.png";
 
-import { Button } from "../../components/Button/index.jsx";
+import { Button } from "../../components/Button";
 
 
 export function Login() {
+  
    
   return (
     <Container>
@@ -30,13 +31,10 @@ export function Login() {
             <input type="password" />
           </InputContainer>
 
-          <Link>
-          Esqueci minha senha
-          </Link>
-          <br />
-          <Button>
-            Entrar
-          </Button>
+          <Link>Esqueci minha senha</Link>
+          
+          <Button>Entrar</Button> 
+
         </Form>
       
 
