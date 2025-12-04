@@ -49,14 +49,17 @@ export const RightContainer = styled.div`
     font-size: 18px;
     font-weight: 800;
     margin-top: 25px;
-  
-  a {
-    
-    text-decoration: underline;
-    font-weight: inherit;
-    cursor: pointer;
-    
-   }
+
+    a {
+      text-decoration: underline;
+      font-weight: inherit;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+        opacity: 0.9;
+      }
+    }
   }
 `;
 
@@ -89,6 +92,7 @@ export const InputContainer = styled.div`
   gap: 8px;
   width: 100%;
   
+  
 
   input {
    width: 100%;
@@ -106,6 +110,13 @@ export const InputContainer = styled.div`
     font-weight: 600;
     color: #ffffff;
   };
+  p {
+    color: #cf3057;
+    font-size: 14px;
+    line-height: 80%;
+    font-weight: 600;
+    height: 10px;
+  }
 `;
 
 export const Link = styled.a`
@@ -119,5 +130,7 @@ export const Link = styled.a`
 
   &:hover {
     text-decoration: underline;
+    opacity: 0.9;
+
   }
 `;
