@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 export const StyledButton = styled.button`
   background-color: #9758A6; /* Exemplo de cor */
-  color: #ffffff;
+  color: ${(props) => props.theme.white};
   height : 52px;
   border: 0;
   border-radius: 5px;

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import backgroundLight from "../../assets/background 1.png";
 import backgroundDark from "../../assets/background 2.png";
 
+
 export const Container = styled.div`
   display: flex;
   height: 100vh;
@@ -50,38 +51,24 @@ export const RightContainer = styled.div`
     font-weight: 800;
     margin-top: 25px;
 
-    a {
-      text-decoration: underline;
-      font-weight: inherit;
-      cursor: pointer;
-
-      &:hover {
-        
-        opacity: 0.9;
-      }
-    }
+    
   }
 `;
 
 export const Title = styled.h2`
   font-family: "Road Rage", sans-serif;
   font-size: 40px;
-  color: ${(props) => props.theme.white};
+  color: #9758A6;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
  
-
-  span {
-    color: #9758A6;
-    
-  }
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+  gap: 5px;
+  padding: 3px;
   width: 80%;
   max-width: 400px;
   
@@ -111,21 +98,24 @@ export const InputContainer = styled.div`
     color: ${(props) => props.theme.white};
   };
   p {
-    color: #cf3057;
+    color: ${(props) => props.theme.darkRed};
     font-size: 14px;
     line-height: 80%;
     font-weight: 600;
     height: 10px;
   }
 `;
-
 export const Link = styled.a`
   color: ${(props) => props.theme.white};
   font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
   
   text-decoration: none;
- &:hover {
+
+  &:hover {
     color: #9758A6;
   }
+
 
 `;
