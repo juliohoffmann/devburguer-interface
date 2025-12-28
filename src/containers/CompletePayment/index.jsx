@@ -74,10 +74,13 @@ export  function CompletePayment() {
       return;
     }
 
-    stripe.retrievePaymentIntent(clientSecret).then(({paymentIntent}) => {
+    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
       if (!paymentIntent) {
+        console.error("PaymentIntent não encontrado.");
         return;
       }
+      console.log("PaymentIntent Status retornado pelo Stripe:", paymentIntent.status); // <-- Adicione esta linha
+      console.log("PaymentIntent completo:", paymentIntent); // <-- Adicione esta linha para ver todos os detalhes
 
       setStatus(paymentIntent.status);
       setIntentId(paymentIntent.id);
@@ -90,7 +93,7 @@ export  function CompletePayment() {
       <div id="status-icon" style={{backgroundColor: STATUS_CONTENT_MAP[status].iconColor}}>
         {STATUS_CONTENT_MAP[status].icon}
       </div>
-      <h2 id="status-text" class Name="status-title">{STATUS_CONTENT_MAP[status].text}</h2>
+      <h2 id="status-text" className="status-title">{STATUS_CONTENT_MAP[status].text}</h2>
       {intentId && <div id="details-table">
         <table>
           <tbody>
