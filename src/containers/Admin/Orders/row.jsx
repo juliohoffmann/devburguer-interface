@@ -66,7 +66,7 @@ export function Row(props) {  // ← CORRIGIDO
             defaultValue={
               orderStatusOptions.find((status) => status.value === row.status) || null
             }
-            onChange={(status) => newStatusOrder(row.orderId, status.value)}
+            onChange={(status) => newStatusOrder(row.order.id, status.value)}
             isLoading={loading}
             menuPortalTarget={document.body}
           />

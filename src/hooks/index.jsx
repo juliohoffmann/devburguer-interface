@@ -1,17 +1,12 @@
-import { UserProvider } from "./UserContext";
-import { CartProvider } from "./cartContext";
-import { Elements } from "@stripe/react-stripe-js"; // Importe o CartProvider
-import stripePromise from "../config/stripeConfig";
+import UserProvider from "./UserContext";
+import CartProvider from "./CartContext";
+
 const AppProvider = ({ children }) => {
-    return ( // Adicione os parênteses aqui
-        <UserProvider>
-            <CartProvider>
-                <Elements stripe={stripePromise}>
-                    {children}
-                </Elements>
-            </CartProvider>
-        </UserProvider>
-    );
+  return (
+    <UserProvider>
+      <CartProvider>{children}</CartProvider>
+    </UserProvider>
+  );
 };
 
 export default AppProvider;

@@ -8,15 +8,17 @@ import { api } from "../../services/api";
 import { Button } from "../../components/Button";
 import Logo from "../../assets/Logo.png";
 import { Container, LeftContainer, RightContainer, Title, Form, InputContainer, Link } from "./style";
-
 export function Login() {
   const navigate = useNavigate();
   const { putUserData } = useUser();
 
   const schema = yup
     .object({
-      email: yup.string().email('Digite um email válido').required('O email é obrigatório'),
-      password: yup.string().min(6, 'A senha deve ter pelo menos 6 caracteres').required('A senha é obrigatória'),
+      email: yup
+        .string()
+        .email("Digite um e-mail válido")
+        .required("O e-mail é obrigatório"),
+      password: yup.string().required("A senha é obrigatória"),
     })
     .required();
 
@@ -27,45 +29,33 @@ export function Login() {
   } = useForm({
     resolver: yupResolver(schema),
   });
-
   const onSubmit = async (data) => {
-    try {
-      const response = await toast.promise(
-        api.post('/sessions', {
-          email: data.email,
-          password: data.password,
-        }),
-        {
-          pending: "Verificando seus dados...",
-          success: "Login realizado com sucesso!",
-          error: "E-mail ou senha incorretos. Tente novamente.", // Esta mensagem é genérica, o catch pode refinar
-        }
-      );
-
-      // As linhas abaixo só devem ser executadas se a requisição for bem-sucedida
-      // localStorage.setItem('devburger:userData', JSON.stringify(response.data.user)); // Já está sendo feito pelo UserContext
-      // localStorage.setItem('devburger:token', response.data.token); // Já está sendo feito pelo UserContext
-      console.log("Login bem-sucedido:", response.data);
-
-      putUserData(response.data); // Mova esta linha para cá
-
-      if (response.data?.admin) {
-        navigate("/admin/pedidos");
-      } else {
-        navigate("/");
+    const { data: userData } = await toast.promise(
+      api.post("/session", {
+        email: data.email,
+        password: data.password,
+      }),
+      {
+        peding: "Verificando seus dados",
+        success: {
+          render() {
+            setTimeout(() => {
+              if (userData?.admin) {
+                navigate("/admin/pedidos");
+              } else {
+                navigate("/");
+              }
+            }, 2000);
+            return "Seja Bem Vindo(a)";
+          },
+        },
+        error: "E-mail ou password estão incorretos.",
       }
-    } catch (err) {
-      console.error("Erro no login:", err);
-      // ✅ CORREÇÃO AQUI: Usando encadeamento opcional
-      if (err.response?.data?.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error("Falha ao fazer login. Verifique sua conexão ou tente novamente.");
-      }
-    }
+    );
+    putUserData(userData);
   };
 
-  return (
+   return (
     <Container>
       <LeftContainer>
         <img src={Logo} alt="Logo DevBurguer" />

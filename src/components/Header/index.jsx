@@ -23,7 +23,7 @@ export function Header() {
         console.log(userInfo); // userInfo aqui ainda terá o valor ANTES do logout
     }
 
-    return (
+   return (
         <Container>
             <Content>
                 <Navigation>

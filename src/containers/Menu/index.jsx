@@ -3,111 +3,116 @@ import { Container, Banner, BackButton, CategoryMenu, CategoryButton, ProductsCo
 import { api } from "../../services/api.js";
 import { formatPrice } from "../../utils/FormatPrice.js";
 import CardProduct from "../../components/CardProduct/index.jsx";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
 export function Menu() {
-    const [categories, setCategories] = useState([]);
-    const [products, setProducts] = useState([]); // Este estado vai guardar TODOS os 36 produtos
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [activeCategory, setActiveCategory] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const navigate = useNavigate();
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
 
-    const [searchParams] = useSearchParams();
-    const navigate = useNavigate();
+  const [activeCategory, setActiveCategory] = useState(() => {
+    const categoryId = +queryParams.get("categoria");
+    if (categoryId) {
+      return categoryId;
+    }
+    return 0;
+  });
 
-    // Efeito para carregar categorias e produtos iniciais
-    useEffect(() => {
-        async function loadCategories() {
-            try {
-                const response = await api.get('/categories');
-                const newCategories = [{ id: 0, name: 'Todos' }, ...response.data];
-                setCategories(newCategories);
-            } catch (error) {
-                console.error("Erro ao carregar categorias:", error);
-            }
-        }
+  // Este useEffect monitora mudanças na URL para atualizar activeCategory
+  useEffect(() => {
+    const newCategoryId = +queryParams.get("categoria");
+    if (newCategoryId !== activeCategory) {
+      setActiveCategory(newCategoryId || 0);
+    }
+  }, [search, activeCategory]); // Adicione activeCategory às dependências para garantir que a comparação seja com o estado mais recente
 
-        async function loadProducts() {
-            try {
-                const response = await api.get('/products');
-                const newProducts = response.data
-                    // CORREÇÃO 1: REMOVIDO O FILTRO DE OFERTA AQUI
-                    // Agora, 'newProducts' terá TODOS os 36 produtos
-                    .map(product => {
-                        return { ...product, formatedPrice: formatPrice(product.price) };
-                    });
-                setProducts(newProducts);
-                // NÃO inicialize filteredProducts aqui. O useEffect de filtragem fará isso com base na URL.
-            } catch (error) {
-                console.error("Erro ao carregar produtos:", error);
-            }
-        }
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const { data } = await api.get("/categories");
+        const newCategories = [{ id: 0, name: "Todas" }, ...data];
+        setCategories(newCategories);
+      } catch (error) {
+        console.error("Erro ao carregar categorias:", error);
+      }
+    }
+    async function loadProducts() {
+      try {
+        const { data } = await api.get("/products");
+        const newProducts = data.map((product) => ({
+          currencyValue: formatPrice(product.price),
+          ...product,
+        }));
+        setProducts(newProducts);
+      } catch (error) {
+        console.error("Erro ao carregar produtos:", error);
+      }
+    }
+    loadCategories();
+    loadProducts();
+  }, []);
 
-        loadCategories();
-        loadProducts();
-    }, []); // Executa apenas uma vez ao montar o componente
+  useEffect(() => {
+    const currentActiveCategory = Number(activeCategory);
 
-    // Efeito para ler a categoria da URL e definir o activeCategory
-    useEffect(() => {
-        const categoryIdFromUrl = Number(searchParams.get('categoria')) || 0;
-        setActiveCategory(categoryIdFromUrl);
-    }, [searchParams]); // Reage a mudanças nos parâmetros da URL
+    if (products.length === 0) {
+      setFilteredProducts([]);
+      return;
+    }
 
-    // Efeito para filtrar produtos sempre que activeCategory ou products mudarem
-    useEffect(() => {
-        if (products.length === 0) {
-            setFilteredProducts([]);
-            return;
-        }
+    let newFilteredProducts = [];
+    if (currentActiveCategory === 0) {
+      newFilteredProducts = products; // Mostra todos os produtos
+    } else {
+      newFilteredProducts = products.filter(
+        (product) => product.category_id === currentActiveCategory
+      );
+    }
+    setFilteredProducts(newFilteredProducts);
+  }, [products, activeCategory]);
 
-        if (activeCategory === 0) {
-            setFilteredProducts(products); // Se a categoria ativa for 'Todos', mostra TODOS os produtos carregados
-        } else {
-            // CORREÇÃO 2: Usando 'product.category_id' (com underscore)
-            const newFilteredProducts = products.filter(product => product.category_id === activeCategory);
-            setFilteredProducts(newFilteredProducts);
-        }
-    }, [activeCategory, products]); // Depende de activeCategory e products
-    const handleGoBack = () => {
-        navigate('/'); // Navega para a rota raiz (Home)
-    };
+  function handleGoBack() {
+    navigate(-1);
+  }
 
-
-    return (
-        <Container>
-            <Banner>
-                <h1>
-                    O MELHOR
-                    <br />
-                    HAMBURGUER
-                    <br />
-                    ESTÁ AQUI!
-                    <span>Esse Cardápio🍔está irresistivel!</span>
-                </h1>
-            </Banner>
-            <BackButton onClick={handleGoBack}>
-                Voltar para Home
-            </BackButton>
-            <CategoryMenu>
-                {categories.map((category) => (
-                    <CategoryButton
-                        key={category.id}
-                        to={`/cardapio?categoria=${category.id}`}
-                        isActive={activeCategory === category.id}
-                    // Removido o onClick redundante, o Link já faz a navegação
-                    >
-                        {category.name}
-                    </CategoryButton>
-                ))}
-            </CategoryMenu>
-            <ProductsContainer>
-                {filteredProducts && filteredProducts.length > 0 ? (
-                    filteredProducts.map(product => (
-                        <CardProduct key={product.id} product={product} />
-                    ))
-                ) : (
-                    <p>Nenhum produto encontrado nesta categoria.</p>
-                )}
-            </ProductsContainer>
-        </Container>
-    );
+  return (
+    <Container>
+      <Banner>
+        <h1>
+          O MELHOR
+          <br />
+          HAMBURGUER
+          <br />
+          ESTÁ AQUI!
+          <span>Esse Cardápio🍔está irresistivel!</span>
+        </h1>
+      </Banner>
+      <BackButton onClick={handleGoBack}>
+        Voltar para Home
+      </BackButton>
+      <CategoryMenu>
+        {categories.map((category) => (
+          <CategoryButton
+            key={category.id}
+            to={`/cardapio?categoria=${category.id}`}
+            $isActive={Number(activeCategory) === category.id}
+          >
+            {category.name}
+          </CategoryButton>
+        ))}
+      </CategoryMenu>
+      <ProductsContainer>
+        {filteredProducts && filteredProducts.length > 0 ? (
+          filteredProducts.map(product => (
+            <CardProduct key={product.id} product={product} />
+          ))
+        ) : (
+          <p>Nenhum produto encontrado nesta categoria.</p>
+        )}
+      </ProductsContainer>
+    </Container>
+  );
 }

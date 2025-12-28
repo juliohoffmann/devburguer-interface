@@ -1,100 +1,109 @@
-import { useEffect, useContext, createContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
+const CartContext = createContext({});
 
-const CartContext = createContext();
+const CartProvider = ({ children }) => {
+  const [cartProducts, setCartProducts] = useState([]);
 
-export const CartProvider = ({ children }) => {
-    const [cartProducts, setCartProducts] = useState([]);
+  const putProductInCart = (product) => {
+    const cartIndex = cartProducts.findIndex((prd) => prd.id === product.id);
 
-    // Carrega os produtos do carrinho do localStorage na montagem do componente
-    useEffect(() => {
-        const storedCart = localStorage.getItem('devburger:cartInfo');
-        if (storedCart) {
-            try {
-                setCartProducts(JSON.parse(storedCart));
-            } catch (error) {
-                console.error("Erro ao parsear cartInfo do localStorage:", error);
-                localStorage.removeItem('devburger:cartInfo'); // Limpa se estiver corrompido
-            }
-        }
-    }, []); // Executa apenas uma vez na montagem
+    let newProductsInCart = [];
 
-    // Salva os produtos do carrinho no localStorage sempre que 'cartProducts' muda
-    useEffect(() => {
-        localStorage.setItem('devburger:cartInfo', JSON.stringify(cartProducts));
-    }, [cartProducts]); // Executa sempre que cartProducts é atualizado
+    if (cartIndex >= 0) {
+      newProductsInCart = cartProducts;
 
-    const putProductInCart = useCallback((product) => {
-        const productIndex = cartProducts.findIndex(p => p.id === product.id);
+      newProductsInCart[cartIndex].quantity =
+        newProductsInCart[cartIndex].quantity + 1;
 
-        let newCartProducts = [];
-        if (productIndex >= 0) {
-            // Se o produto já existe no carrinho, aumenta a quantidade
-            newCartProducts = cartProducts.map(p =>
-                p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
-            );
-        } else {
-            // Se o produto não existe, adiciona com quantidade 1
-            newCartProducts = [...cartProducts, { ...product, quantity: 1 }];
-        }
-        setCartProducts(newCartProducts);
-    }, [cartProducts]); // Depende de cartProducts para ter o estado mais recente
+      setCartProducts(newProductsInCart);
+      toast.success("Adicionado ao carrinho!");
+    } else {
+      product.quantity = 1;
+      newProductsInCart = [...cartProducts, product];
+      setCartProducts(newProductsInCart);
+    }
+    updateLocalStorage(newProductsInCart);
+  };
 
-    const deleteProduct = useCallback((productId) => {
-        const newCartProducts = cartProducts.filter(product => product.id !== productId);
-        setCartProducts(newCartProducts);
-    }, [cartProducts]);
+  const clearCart = (product) => {
+    setCartProducts([]);
+    updateLocalStorage([]);
+  };
 
-    const increaseProduct = useCallback((productId) => {
-        const newCartProducts = cartProducts.map(product =>
-            product.id === productId ? { ...product, quantity: product.quantity + 1 } : product
-        );
-        setCartProducts(newCartProducts);
-    }, [cartProducts]);
+  const deleteProduct = (productId) => {
+    const newCart = cartProducts.filter((prd) => prd.id !== productId);
 
-    const decreaseProduct = useCallback((productId) => {
-        const productIndex = cartProducts.findIndex(p => p.id === productId);
+    setCartProducts(newCart);
+    updateLocalStorage(newCart);
+  };
 
-        if (productIndex >= 0) {
-            if (cartProducts[productIndex].quantity > 1) {
-                const newCartProducts = cartProducts.map(product =>
-                    product.id === productId ? { ...product, quantity: product.quantity - 1 } : product
-                );
-                setCartProducts(newCartProducts);
-            } else {
-                // Se a quantidade for 1, remove o produto do carrinho
-                deleteProduct(productId);
-            }
-        }
-    }, [cartProducts, deleteProduct]); // Depende de cartProducts e deleteProduct
+  const increaseProduct = (productId) => {
+    const newCart = cartProducts.map((prd) => {
+      return prd.id === productId
+        ? { ...prd, quantity: prd.quantity + 1 }
+        : prd;
+    });
 
-    const clearCart = useCallback(() => {
-        setCartProducts([]);
+    setCartProducts(newCart);
+    updateLocalStorage(newCart);
+  };
 
-    }, []); // Não depende de nada
+  const decreaseProduct = (productId) => {
+    const cartIndex = cartProducts.findIndex((prd) => prd.id === productId);
 
-    return (
-        <CartContext.Provider
-            value={{
-                cartProducts,
-                putProductInCart,
-                clearCart,
-                deleteProduct,
-                increaseProduct, // Corrigido o nome para 'increaseProduct'
-                decreaseProduct,
-            }}
-        >
-            {children}
-        </CartContext.Provider>
-    );
+    if (cartProducts[cartIndex].quantity > 1) {
+      const newCart = cartProducts.map((prd) => {
+        return prd.id === productId
+          ? { ...prd, quantity: prd.quantity - 1 }
+          : prd;
+      });
 
+      setCartProducts(newCart);
+      updateLocalStorage(newCart);
+    } else {
+      deleteProduct(productId);
+    }
+  };
+
+  const updateLocalStorage = (products) => {
+    localStorage.setItem("devburger:cartInfo", JSON.stringify(products));
+  };
+
+  useEffect(() => {
+    const clientCartData = localStorage.getItem("devburger:cartInfo");
+
+    if (clientCartData) {
+      setCartProducts(JSON.parse(clientCartData));
+    }
+  }, []);
+
+  return (
+    <CartContext.Provider
+      value={{
+        cartProducts,
+        putProductInCart,
+        clearCart,
+        deleteProduct,
+        increaseProduct,
+        decreaseProduct,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 };
 
 export const useCart = () => {
-    const context = useContext(CartContext);
-    if (context === undefined) {
-        throw new Error('useCart deve ser usado dentro de um CartProvider');
-    }
-    return context;
+  const context = useContext(CartContext);
+
+  if (!context) {
+    throw new Error("useUser must be a valid context");
+  }
+
+  return context;
 };
+
+export default CartProvider;
 

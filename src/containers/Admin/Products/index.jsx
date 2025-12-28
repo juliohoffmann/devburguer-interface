@@ -13,7 +13,6 @@ import { formatPrice } from '../../../utils/FormatPrice.js';
 import { useNavigate } from 'react-router-dom'; // <-- Erro aqui
 
 
-
 export function Products() {
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();

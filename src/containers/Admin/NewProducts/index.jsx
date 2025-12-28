@@ -8,92 +8,74 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const schema = yup
-    .object({
-        name: yup.string().required('Digite o nome do produto'),
-        price: yup
-            .number()
-            .typeError('O preço deve ser um número válido')
-            .positive('O preço deve ser um valor positivo')
-            .required('Digite o preço do produto'),
-        category: yup.number().required('Selecione uma categoria').typeError('Selecione uma categoria válida'),
-        offer: yup.boolean(),
-        file: yup.mixed()
-            .test('required', 'Faça o upload da imagem do produto', (value) => {
-                return value && value.length > 0;
-            })
-            .test('fileSize', 'O arquivo é muito grande. O tamanho máximo é 5MB', (value) => {
-                return value && value[0] && value[0].size <= 5000000;
-            })
-            .test('type', 'Tipo de arquivo não suportado. Apenas PNG e JPEG são aceitos', (value) => {
-                return value && value[0] && ['image/jpeg', 'image/png'].includes(value[0].type);
-            }),
+const schema = yup.object({
+  name: yup.string().required("Digite o nome"),
+  price: yup
+    .number()
+    .positive()
+    .required("Digite o preço do produto")
+    .typeError("Digite o preço do produto"),
+  category: yup.object().required("Escolha uma categoria"),
+  offer: yup.boolean(),
+  file: yup
+    .mixed()
+    .test("required", "Escolha um arquivo para continuar", (value) => {
+      return value && value.length > 0;
     })
-    .required();
+    .test("fileSize", "Carregue arquivos até 5mb", (value) => {
+      return value && value.length > 0 && value[0].size <= 50000;
+    })
+    .test("type", "Carregue paenas imagens PNG ou JPEG", (value) => {
+      return (
+        (value && value.length > 0 && value[0].type === "image/jpeg") ||
+        value[0].type === "image/png"
+      );
+    }),
+});
 
 export function NewProducts() {
-    const [fileName, setFileName] = useState(null);
-    const [categories, setCategories] = useState([]);
+  const [fileName, setFileName] = useState(null);
+  const [categories, setCategories] = useState([]);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        async function loadCategories() {
-            try {
-                const { data } = await api.get("/categories");
-                setCategories(data);
-            } catch (error) {
-                console.error("Erro ao carregar categorias:", error);
-                toast.error("Erro ao carregar categorias.");
-            }
-        }
-        loadCategories();
-    }, []);
+  useEffect(() => {
+    async function loadCategories() {
+      const { data } = await api.get("/categories");
 
-    const {
-        register,
-        handleSubmit,
-        control,
-        formState: { errors },
-        watch,
-    } = useForm({
-        resolver: yupResolver(schema),
+      setCategories(data);
+    }
+    loadCategories();
+  }, []);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = async (data) => {
+    const productFormData = new FormData();
+
+    productFormData.append("name", data.name);
+    productFormData.append("price", data.price * 100);
+    productFormData.append("category_id", data.category.id);
+    productFormData.append("file", data.file[0]);
+    productFormData.append("offer", data.offer);
+
+    await toast.promise(api.post("/products", productFormData), {
+      pending: "Adicionando o produto...",
+      success: "Produto criado com sucesso",
+      error: "Falha ao criar o produto, tente novamente!",
     });
 
-    const watchedFile = watch("file");
-
-    useEffect(() => {
-        if (watchedFile && watchedFile.length > 0) {
-            setFileName(watchedFile[0].name);
-        } else {
-            setFileName("Upload do produto");
-        }
-    }, [watchedFile]);
-
-    const onSubmit = async (data) => {
-        const productFormData = new FormData();
-        productFormData.append("name", data.name);
-        productFormData.append("price", data.price);
-        productFormData.append("category_id", data.category);
-        productFormData.append("file", data.file[0]);
-        productFormData.append("offer", data.offer);
-
-        try {
-            await toast.promise(api.post("/products", productFormData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }), {
-                pending: 'Adicionando produto...',
-                success: 'Produto adicionado com sucesso!',
-                error: 'Erro ao adicionar o produto.'
-            });
-        } catch (error) {
-            console.error("Erro no envio do produto:", error);
-        }
-
-        setTimeout(() => navigate('/admin/produtos'), 2000);
-    };
+    setTimeout(() => {
+      navigate("/admin/produtos");
+    }, 2000);
+  };
 
     return (
         <Container>

@@ -47,7 +47,7 @@ export  function OffersCarousel() {
         }
     };
 
-    return (
+     return (
         <Container>
             <Title> OFERTAS DO DIA </Title>
             <Carousel
@@ -63,6 +63,7 @@ export  function OffersCarousel() {
         </Container>
     );
 }
+
 
 
 

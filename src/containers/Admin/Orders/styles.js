@@ -17,7 +17,7 @@ export const Filter = styled.div`
   gap: 50px;
 `;
 
-export const  FilterOptions = styled.button`
+export const  FilterOption = styled.button`
   cursor: pointer;
   background: none;
   border: none;

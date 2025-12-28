@@ -1,12 +1,12 @@
-import {Body,Header,Root,Tr,Th,Td} from "./styles";
+import { Body, Header, Root, Td, Th, Tr } from "./styles";
 
-
-export const Table = {
-    Root,
-    Header,
-    Tr,
-    Th,
-    Td,
-    Body
+const Table = { // <-- Correção aqui: removido 'function'
+  Body,
+  Header,
+  Root,
+  Td,
+  Th,
+  Tr,
 };
 
+export { Table };
