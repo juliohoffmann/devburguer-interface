@@ -1,12 +1,21 @@
 // src/components/CartButton/index.jsx
+import React from "react";
 import Cart from "../../assets/Cart.png";
 import { ContainerButton } from "./styles.js";
+import { toast } from 'react-toastify'; // Importe o toast
 
-// 1. O componente CartButton precisa receber as props
-export function CartButton ({ onClick, ...props }) { // Desestruture onClick e colete o resto das props
+export function CartButton({ onClick, ...props }) {
+    const handleClick = () => {
+        // 1. Chama a função onClick original (que adiciona o produto ao carrinho)
+        if (onClick) {
+            onClick();
+        }
+        // 2. Exibe a mensagem de confirmação usando react-toastify
+        toast.success("Produto adicionado ao carrinho!");
+    };
+
     return (
-        // 2. Passe o onClick e as outras props para o ContainerButton
-        <ContainerButton onClick={onClick} {...props}>
+        <ContainerButton onClick={handleClick} {...props}>
             <img src={Cart} alt="Carrinho-de-compras" />
         </ContainerButton>
     );
