@@ -1,5 +1,5 @@
 // src/components/CartItems/index.jsx
-import { useCart } from "../../hooks/cartContext";
+import { useCart } from "../../hooks/CartContext";
 import { formatPrice } from "../../utils/FormatPrice";
 import { Table } from "../index.js";
 import TrashIcon from "../../assets/trash.svg";
