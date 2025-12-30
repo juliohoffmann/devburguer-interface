@@ -1,7 +1,7 @@
 
 import { navLinks } from "./navLinks.jsx";
 
-import logo from "../../assets/Logo.png";
+import Logo from "../../assets/Logo.png";
 import { SignOut } from "@phosphor-icons/react";
 import { Container, NavLinksContainer, NavLink, Footer } from "./styles";
 import { useUser } from "../../hooks/UserContext";
@@ -15,7 +15,7 @@ export function SideNavAdmin() {
     const { pathname } = useResolvedPath();
     return (
         <Container>
-            <img src={logo} alt="Logo DevBurguer" />
+            <img src={Logo} alt="Logo DevBurguer" />
             <NavLinksContainer>
                 {navLinks.map((link) => (
                     <NavLink
