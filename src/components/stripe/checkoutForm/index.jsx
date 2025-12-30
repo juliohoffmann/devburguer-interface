@@ -7,7 +7,7 @@ import {
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./styles.css";
-import { useCart } from "../../../hooks/cartContext";
+import { useCart } from "../../../hooks/CartContext.jsx";
 import { api } from "../../../services/api";
 import { toast } from "react-toastify";
 
