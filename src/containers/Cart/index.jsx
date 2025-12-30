@@ -1,5 +1,6 @@
 import { Container, Banner, Title, Content } from "./styles";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/Logo.png";
+
 import { CartItems, CartResume } from "../../components";
 
 
