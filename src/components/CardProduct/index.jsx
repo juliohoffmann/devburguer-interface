@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 
 import { CardImage, Container } from "./styles.js";
 import { CartButton } from "../CartButton/index.jsx";
-import { useCart } from "../../hooks/cartContext.jsx";
+import { useCart } from "../../hooks/CartContext.jsx";
 
 
 
-export default function CardProduct({ product }) {
+export default function cardProduct({ product }) {
     const { putProductInCart } = useCart();
 
     return (
@@ -21,6 +21,6 @@ export default function CardProduct({ product }) {
     </Container>
 );
 }
-CardProduct.propTypes = {
+cardProduct.propTypes = {
    product: PropTypes.object.isRequired,
 };
