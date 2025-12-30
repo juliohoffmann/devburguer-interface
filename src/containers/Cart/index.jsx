@@ -1,5 +1,5 @@
 import { Container, Banner, Title, Content } from "./styles";
-import logo from "../../assets/Logo.png";
+import Logo from "../../assets/Logo.png";
 
 import { CartItems, CartResume } from "../../components";
 
@@ -9,7 +9,7 @@ export function Cart() {
     return (
         <Container>
             <Banner>
-                <img src={logo} alt="logo DevBurguer"/>
+                <img src={Logo} alt="Logo DevBurguer"/>
             </Banner>
             <Title>Checkout - Pedido</Title>
             <Content> 
