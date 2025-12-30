@@ -1,7 +1,7 @@
 
 import { navLinks } from "./navLinks.jsx";
 
-import logo from "../../assets/logo.png";
+import logo from "../../assets/Logo.png";
 import { SignOut } from "@phosphor-icons/react";
 import { Container, NavLinksContainer, NavLink, Footer } from "./styles";
 import { useUser } from "../../hooks/UserContext";
