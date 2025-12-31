@@ -16,7 +16,7 @@
     COPY --from=build /app/dist /usr/share/nginx/html
 
     # Expor a porta que o Nginx vai usar (agora é 80)
-    EXPOSE 80 # <--- PORTA 80
+    EXPOSE 80 
 
     CMD ["nginx", "-g", "daemon off;"]
 
