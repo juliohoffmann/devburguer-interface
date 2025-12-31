@@ -1,24 +1,22 @@
-# Etapa 1: build
-FROM node:20-alpine AS build
+    # Etapa 1: build
+    FROM node:20-alpine AS build
+    WORKDIR /app
+    COPY package*.json ./
+    RUN npm install
+    COPY . .
+    RUN npm run build
 
-WORKDIR /app
+    # Etapa 2: servidor
+    FROM nginx:alpine
+    # Remove a configuração padrão do Nginx
+    RUN rm /etc/nginx/conf.d/default.conf
+    # Copia sua configuração personalizada
+    COPY nginx.conf /etc/nginx/conf.d/default.conf # <--- COPIA O ARQUIVO DE CONFIGURAÇÃO
+    # Copia os arquivos da build
+    COPY --from=build /app/dist /usr/share/nginx/html
 
-# Instala as dependências
-COPY package*.json ./
-RUN npm install
+    # Expor a porta que o Nginx vai usar (agora é 80)
+    EXPOSE 80 # <--- PORTA 80
 
-# Copia o restante do projeto
-COPY . .
+    CMD ["nginx", "-g", "daemon off;"]
 
-# Build da aplicação
-RUN npm run build
-
-# Etapa 2: servidor
-FROM nginx:alpine
-
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Expor a porta que o Nginx usa (padrão é 80, não 3001)
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
