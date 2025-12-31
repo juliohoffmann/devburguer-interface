@@ -11,7 +11,7 @@
     # Remove a configuração padrão do Nginx
     RUN rm /etc/nginx/conf.d/default.conf
     # Copia sua configuração personalizada
-    COPY nginx.conf /etc/nginx/conf.d/default.conf # <--- COPIA O ARQUIVO DE CONFIGURAÇÃO
+    COPY nginx.conf /etc/nginx/conf.d/default.conf 
     # Copia os arquivos da build
     COPY --from=build /app/dist /usr/share/nginx/html
 
